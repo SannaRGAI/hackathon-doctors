@@ -30,7 +30,7 @@ class DoctorSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        exclude = ['user']
+        exclude = ['user'] 
 
     def create(self, validated_data):
         validated_data["user"] = self.context.get("request").user

@@ -60,7 +60,7 @@ class CustomUser(AbstractBaseUser):
             self.activation_code = code
             self.save()
 
-    def send_activation_email(self):
+    def send_activation_code(self):
         activation_url = f"{config('LINK')}account/activate/{self.activation_code}"
         message = f'''
             You are signed up successfully!
@@ -68,7 +68,7 @@ class CustomUser(AbstractBaseUser):
         '''
         send_mail('Activate your account', message, 'test@gmail.com', [self.email, ])
     
-    def send_confirm_email(self):
+    def password_confirm(self):
         activation_url = f"{config('LINK')}account/forgot_password/{self.activation_code}"
         message = f"""
         Do you want to change password?

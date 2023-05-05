@@ -8,7 +8,7 @@ class Category(models.Model):
     title = models.CharField(max_length=100)
     cat_doctors = models.ManyToManyField("main.Doctor", blank=True, related_name='cat_doctors')
     def __str__(self):
-        return f"{self.title} => {self.title}"
+        return f"{self.title}"
 
 
 class Service(models.Model):
@@ -16,7 +16,7 @@ class Service(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     def __str__(self):
-        return f"{self.title} => {self.title}"
+        return f"{self.title}"
 
 
 class Doctor(models.Model):
@@ -76,7 +76,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Comment {self.user.username} -> {self.doctor.first_name} [{self.created_at}]"
+        return f"Comment {self.user.email} -> {self.doctor.first_name} [{self.created_at}]"
 
 
 class Rating(models.Model):
@@ -85,7 +85,7 @@ class Rating(models.Model):
     value = models.IntegerField(choices=[(1,1), (2,2), (3,3), (4,4), (5,5)])
 
     def __str__(self):
-        return f"Rating {self.user.username} -> {self.doctor.first_name}"
+        return f"Rating {self.user.email} -> {self.doctor.first_name}"
         
 
 class Like(models.Model):
@@ -93,7 +93,7 @@ class Like(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='likes', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Like {self.user.username} -> {self.doctor.first_name}"
+        return f"Like {self.user.email} -> {self.doctor.first_name}"
 
 
 class Favorite(models.Model):
@@ -101,5 +101,5 @@ class Favorite(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='favorites', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user.username} -> {self.doctor.first_name}"
+        return f"{self.user.email} -> {self.doctor.first_name}"
 
