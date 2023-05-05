@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from decouple import config
 
+from .utils import send_activation_code, password_confirm
+
 
 class CustomUserManager(BaseUserManager):
 
@@ -61,21 +63,27 @@ class CustomUser(AbstractBaseUser):
             self.save()
 
     def send_activation_code(self):
-        activation_url = f"{config('LINK')}account/activate/{self.activation_code}"
-        message = f'''
-            You are signed up successfully!
-            Activate your account {activation_url}
-        '''
-        send_mail('Activate your account', message, 'test@gmail.com', [self.email, ])
-    
+        send_activation_code.delay(self.id)
+        
     def password_confirm(self):
-        activation_url = f"{config('LINK')}account/forgot_password/{self.activation_code}"
-        message = f"""
-        Do you want to change password?
-        Confirm password changes: {activation_url}
-        """
-        send_mail(
-            "Please confirm new changes", 
-            message, "test@gmail.com", [self.email, ]
-        )
+        password_confirm.delay(self.id)
+
+    # def send_activation_code(self):
+    #     activation_url = f"{config('LINK')}account/activate/{self.activation_code}"
+    #     message = f'''
+    #         You are signed up successfully!
+    #         Activate your account {activation_url}
+    #     '''
+    #     send_mail('Activate your account', message, 'test@gmail.com', [self.email, ])
+
+    # def password_confirm(self):
+    #     activation_url = f"{config('LINK')}account/forgot_password/{self.activation_code}"
+    #     message = f"""
+    #     Do you want to change password?
+    #     Confirm password changes: {activation_url}
+    #     """
+    #     send_mail(
+    #         "Please confirm new changes", 
+    #         message, "test@gmail.com", [self.email, ]
+    #     )
 

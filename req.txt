@@ -6,3 +6,5 @@ drf-yasg
 Pillow
 psycopg2-binary
 python-decouple
+celery
+redis
