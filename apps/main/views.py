@@ -12,6 +12,8 @@ from .models import *
 from .permissions import IsAdminOrReadOnly, IsAuthor
 from .serializers import *
 from .services import booked_up
+from .tasks import create_an_appointment
+
 
 class DoctorViewSet(ModelViewSet):
     queryset = Doctor.objects.all()
@@ -170,6 +172,7 @@ class AppointmentViewSet(ModelViewSet):
         entry = Appointment.objects.get(
             date=book_date, time_list=book_time, doctor=doctor
         )
+        create_an_appointment.delay(entry.id)
         return Response("Appointment created")
 
 

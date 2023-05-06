@@ -36,6 +36,7 @@ urlpatterns = [
     path('account/', include('apps.account.urls')),
     path('docs/', schema_view.with_ui('swagger')),
     path('main/', include('apps.main.urls')),
+    path('chat/', include('apps.chat.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
