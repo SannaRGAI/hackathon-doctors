@@ -16,7 +16,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'email', 
+            'email',
+            'username',
             'name', 
             'last_name',
             'password',
@@ -37,9 +38,6 @@ class RegisterSerializer(serializers.ModelSerializer):
                 'Passwords do not match'
             )
         return attrs
-
-    # def create(self, validated_data):
-    #     return User.objects.create_user(**validated_data)
 
     def save(self):
         data = self.validated_data
@@ -71,8 +69,8 @@ class ForgotSerializer(serializers.Serializer):
     def save(self):
         data = self.validated_data
         user = User.objects.get(**data)
-        user.set_activation_code()
-        user.password_confirm()
+        user.set_activation_code() # generate random password
+        user.password_confirm() #. send to email
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()

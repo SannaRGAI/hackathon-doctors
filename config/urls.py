@@ -22,6 +22,8 @@ from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
+from apps.social_login.views import Home
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -33,10 +35,12 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include('apps.account.urls')),
+    path('account/', include('apps.user_account.urls')),
     path('docs/', schema_view.with_ui('swagger')),
     path('main/', include('apps.main.urls')),
     path('chat/', include('apps.chat.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('', Home.as_view(), name='home')
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

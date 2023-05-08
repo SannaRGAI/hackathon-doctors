@@ -6,9 +6,13 @@ User = get_user_model()
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
-    cat_doctors = models.ManyToManyField("main.Doctor", blank=True, related_name='cat_doctors')
+    cat_doctors = models.ManyToManyField('main.Doctor', blank=True, related_name='cat_doctors')
+    
     def __str__(self):
-        return f"{self.title}"
+        return f'{self.title}'
+    
+    class Meta:
+        verbose_name_plural = 'Categories'
 
 
 class Service(models.Model):

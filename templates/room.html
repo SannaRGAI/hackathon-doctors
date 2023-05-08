@@ -83,7 +83,10 @@ setInterval(function(){
             $("#display").empty();
             for (var key in response.messages)
             {
-                var temp="<div class='container darker'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].value+"</p><span class='time-left'>"+response.messages[key].date+"</span></div>";
+                var date = new Date(response.messages[key].date);
+                var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+                var formattedDate = date.toLocaleString('en-US', options);
+                var temp="<div class='container darker'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].value+"</p><span class='time-left'>"+formattedDate+"</span></div>";
                 $("#display").append(temp);
             }
         },
@@ -110,7 +113,7 @@ setInterval(function(){
 
     input[type=submit] {
     width: 100%;
-    background-color: #4CAF50;
+    background-color: blue;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -120,7 +123,7 @@ setInterval(function(){
     }
 
     input[type=submit]:hover {
-    background-color: #45a049;
+    background-color: darkblue;
     opacity: 2;
     border-radius: 50px;
     }
@@ -146,6 +149,10 @@ setInterval(function(){
 </body>
 
 <script type="text/javascript">
+  function scrollToBottom() {
+    $('#display').scrollTop($('#display')[0].scrollHeight);
+  }
+
   $(document).on('submit','#post-form',function(e){
     e.preventDefault();
 
@@ -160,9 +167,29 @@ setInterval(function(){
       },
       success: function(data){
         // alert(data)
+        $('#display').append("<div class='container darker'><b>" + data.user + "</b><p>" + data.message + "</p><span class='time-left'>" + data.timestamp + "</span></div>");
+        $('#message').val('');
+        scrollToBottom();
       }
     });
+
     document.getElementById('message').value = ''
+
+  });
+
+  $('#display').on('click', function() {
+    scrollToBottom();
+  });
+
+  $('#display').on('keydown', function(e) {
+    if (e.which == 13) { // если нажата клавиша Enter
+      e.preventDefault(); // предотвращаем вставку символа новой строки
+      scrollToBottom();
+    }
+  });
+
+  $(window).on('load', function() {
+    scrollToBottom();
   });
 </script>
 <style>
@@ -170,6 +197,35 @@ setInterval(function(){
    background: #c7b39b url("{% static 'chat-bg.jpg' %}");
    color: #fff;
   }
+
+  #display {
+    max-height: 300px;
+    overflow: auto;
+  }
+
+  /* настройки прокрутки для Webkit браузеров (Chrome, Safari, Opera) */
+  #display::-webkit-scrollbar {
+    width: 15px; /* ширина прокрутки */
+    border: 10px solid transparent;
+    border-radius: 8px;
+    background-clip: padding-box;
+  }
+
+  #display::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* цвет фона прокрутки */
+    border-radius: 30px; /* радиус закругления углов прокрутки */
+  }
+
+  #display::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 255, 0.91); /* цвет фона при наведении */
+  }
+
+  #display::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #f1f1f1; /* цвет фона для Webkit браузеров */
+  }
+
+
 </style>
 
 </html>

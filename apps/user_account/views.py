@@ -35,10 +35,10 @@ class RegisterAPIView(APIView):
 @api_view(["GET"])
 def activate(request, activation_code):
     user = get_object_or_404(User, activation_code=activation_code)
-    user.is_active = True
+    user.is_active = True # делает пользователя активным,  поле  is_active меняется из False на True
     user.activation_code = ''
     user.save()
-    return redirect("http://127.0.0.1:8000/docs/")
+    return redirect("http://127.0.0.1:8000/docs/") # redirects to swagger
 
 
 class ChangePasswordView(UpdateAPIView):

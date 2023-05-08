@@ -9,27 +9,27 @@ from .utils import send_activation_code, password_confirm
 
 class CustomUserManager(BaseUserManager):
 
-    def _create(self, email, password, **extra_fields):
+    def _create(self, email, username, password, **extra_fields):
         if not email:
             raise ValueError('Email is required')
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_user(self, email, password, **extra_fields):
-        return self._create(email, password, **extra_fields)
+    def create_user(self, email, username, password, **extra_fields):
+        return self._create(email, username, password, **extra_fields)
 
-    def create_superuser(self, email, password, **extra_fields):
+    def create_superuser(self, email, username, password, **extra_fields):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
-        return self._create(email, password, **extra_fields)
+        return self._create(email, username, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser):
     use_in_migrations = True
 
-    username = None
+    username = models.CharField(max_length=55, blank=True, null=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=55)
     last_name = models.CharField(max_length=55)
@@ -37,8 +37,8 @@ class CustomUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     activation_code = models.CharField(max_length=8, blank=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
     objects = CustomUserManager()
 
@@ -67,6 +67,9 @@ class CustomUser(AbstractBaseUser):
         
     def password_confirm(self):
         password_confirm.delay(self.id)
+
+    def __str__(self):
+        return self.email
 
     # def send_activation_code(self):
     #     activation_url = f"{config('LINK')}account/activate/{self.activation_code}"

@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% load socialaccount %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="text-align: center; padding-top: 10%;">
+  <h1 style="color: white"> Login </h1>
+
+  <br /><br />
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>  
+  {% if user.is_authenticated %}
+    
+    <h3 style="
+    color:yellowgreen; 
+    font-size: 70px;">
+        &hearts;Welcome {{ user.username }}&hearts;
+    </h3>
+    <br /><br />
+    <a href="{% url 'account_logout' %}" class="btn btn-danger">Logout</a>
+  {% else %}
+    <!-- GitHub button starts here -->
+    <a href="{% provider_login_url 'github' %}" class="btn btn-secondary">
+      <i class="fa fa-github fa-fw"></i>
+      <span>Login with GitHub</span>
+    </a>
+    <!-- GitHub button ends here -->
+  {% endif %}
+  <style>
+    body {
+     background: #c7b39b url("{% static 'bg.jpg' %}");
+     color: #fff;
+    }
+</style>
+
+</div>
+
+{% endblock content %}
